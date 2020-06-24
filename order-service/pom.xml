@@ -7,11 +7,11 @@
         <groupId>com.springcloud</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
+
     <groupId>com.springcloud</groupId>
     <artifactId>order-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>order-service</name>
-    <description>Demo project for Spring Boot</description>
 
     <dependencies>
         <dependency>
@@ -26,7 +26,20 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
     </dependencies>
 
 

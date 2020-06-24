@@ -21,8 +21,9 @@
         <module>eureka-server</module>
         <module>product-service</module>
         <module>order-service</module>
-        <module>api-gateway</module>
         <module>jwt</module>
+        <module>springboot-jwt-redis</module>
+        <module>api-gateway</module>
     </modules>
 
     <properties>
