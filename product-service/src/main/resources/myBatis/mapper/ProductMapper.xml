@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springcloud.product.dao.ProductMapper">
+
+    <select id="listProducts" resultType="com.springcloud.product.domain.Product">
+        select * from t_product
+    </select>
+
+    <select id="findByid" resultType="com.springcloud.product.domain.Product" parameterType="Integer">
+        select * from t_product where id = #{id}
+    </select>
+
+<!--    <delete id="deleteDataOneYearAgo" parameterType="String">-->
+<!--        delete from MONI_DATA_TO_BOMC_HIS where request_time &lt; add_months(sysdate,-12)-->
+<!--    </delete>-->
+
+<!--    <insert id="saveMoniDataHis" parameterType="com.shmcc.ad.monitor.entity.MoniDataToBomc">-->
+<!--        insert into MONI_DATA_TO_BOMC_HIS-->
+<!--        values-->
+<!--        (-->
+<!--            #{id, jdbcType=VARCHAR},-->
+<!--            #{ip, jdbcType=VARCHAR},-->
+<!--            #{port, jdbcType=VARCHAR},-->
+<!--            #{operate, jdbcType=VARCHAR},-->
+<!--            #{moniResult, jdbcType=VARCHAR},-->
+<!--            #{success, jdbcType=VARCHAR},-->
+<!--            to_date(#{requestDate, jdbcType=VARCHAR},'yyyy-mm-dd hh24:mi:ss'),-->
+<!--            to_date(#{responseDate, jdbcType=VARCHAR},'yyyy-mm-dd hh24:mi:ss')-->
+<!--        )-->
+<!--    </insert>-->
+
+
+
+</mapper>

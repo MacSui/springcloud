@@ -40,7 +40,7 @@ public class LoginFilter extends ZuulFilter {
     }
 
     @Override
-    public Object run() throws ZuulException {
+    public Object run(){
         RequestContext requestContext = RequestContext.getCurrentContext();
         HttpServletRequest request = requestContext.getRequest();
         String token = request.getHeader("token");
@@ -50,8 +50,8 @@ public class LoginFilter extends ZuulFilter {
             token = request.getParameter("token");
             System.out.println("request parameter token:"+token);
         }
-        String s = null;
-        s.equals("a");
+//        String s = null;
+//        s.equals("a");
         if (StringUtils.isEmpty(token)){
             requestContext.setSendZuulResponse(false);
             requestContext.setResponseStatusCode(HttpStatus.UNAUTHORIZED.value());

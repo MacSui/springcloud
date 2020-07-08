@@ -1,10 +1,55 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: product-service
+
+mybatis:
+  config-location: classpath:myBatis/mybatis-config.xml
+  mapper-locations: classpath:myBatis/mapper/*.xml
+
+---
 server:
   port: 8081
+
+spring:
+  profiles: dev
+  datasource:
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.103.42.10:3306/mall
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 5
+    minIdle: 2
+    maxActive: 10
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  logging:
+    level:
+      com.springcloud: info
+    logHome: /Users/suimac/Documents/doc/01learning/Java/00source/springcloud/product-service/logs
+
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
 
+---
 spring:
-  application:
-    name: product-service
+  profiles: prod
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

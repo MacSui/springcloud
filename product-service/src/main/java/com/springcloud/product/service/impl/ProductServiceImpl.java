@@ -1,7 +1,9 @@
 package com.springcloud.product.service.impl;
 
+import com.springcloud.product.dao.ProductMapper;
 import com.springcloud.product.domain.Product;
 import com.springcloud.product.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,6 +15,9 @@ import java.util.*;
  **/
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    @Autowired
+    private ProductMapper productMapper;
 
     private static final Map<Integer, Product> daoMap = new HashMap<>();
     static{
@@ -33,14 +38,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> listProduct() {
-        Collection<Product> collection = daoMap.values();
-        List<Product> products = new ArrayList<>(collection);
-
+//        Collection<Product> collection = daoMap.values();
+//        List<Product> products = new ArrayList<>(collection);
+        List<Product> products = productMapper.listProducts();
         return products;
     }
 
     @Override
     public Product findByid(int id) {
-        return daoMap.get(id);
+        return productMapper.findByid(id);
+//        return daoMap.get(id);
     }
 }
