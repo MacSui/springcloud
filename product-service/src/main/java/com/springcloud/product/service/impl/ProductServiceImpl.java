@@ -1,5 +1,6 @@
 package com.springcloud.product.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.springcloud.product.dao.ProductMapper;
 import com.springcloud.product.domain.Product;
 import com.springcloud.product.service.ProductService;
@@ -37,9 +38,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> listProduct() {
+    public List<Product> listProduct(int pageNum, int pageSize) {
 //        Collection<Product> collection = daoMap.values();
 //        List<Product> products = new ArrayList<>(collection);
+        String orderBy = "id desc";
+        PageHelper.startPage(pageNum, pageSize, orderBy);
         List<Product> products = productMapper.listProducts();
         return products;
     }

@@ -37,7 +37,7 @@ public class ProductController {
     }
 
     @RequestMapping("/showAllProducts")
-    public List getAllProducts(){
-        return productService.listProduct();
+    public List getAllProducts(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize){
+        return productService.listProduct(pageNum, pageSize);
     }
 }

@@ -4,13 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.springcloud.product.dao.ProductMapper">
 
-    <select id="listProducts" resultType="com.springcloud.product.domain.Product">
+    <select id="listProducts" resultMap="productResult">
         select * from t_product
     </select>
 
-    <select id="findByid" resultType="com.springcloud.product.domain.Product" parameterType="Integer">
+    <select id="findByid" resultMap="productResult" parameterType="Integer">
         select * from t_product where id = #{id}
     </select>
+
+    <resultMap type="com.springcloud.product.domain.Product" id="productResult">
+        <id property="id" column="id"/>
+        <result property="name" column="product_name"/>
+        <result property="price" column="price"/>
+        <result property="store" column="store"/>
+    </resultMap>
+
 
 <!--    <delete id="deleteDataOneYearAgo" parameterType="String">-->
 <!--        delete from MONI_DATA_TO_BOMC_HIS where request_time &lt; add_months(sysdate,-12)-->

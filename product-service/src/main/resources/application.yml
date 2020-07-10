@@ -39,11 +39,18 @@ spring:
     level:
       com.springcloud: info
     logHome: /Users/suimac/Documents/doc/01learning/Java/00source/springcloud/product-service/logs
-
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: false
+  support-methods-arguments: true
+  params: count=countSql
+  row-bounds-with-count: true
+
 
 ---
 spring:

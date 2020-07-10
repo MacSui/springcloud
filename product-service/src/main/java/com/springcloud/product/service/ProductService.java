@@ -11,7 +11,7 @@ import java.util.List;
  **/
 public interface ProductService {
 
-    List<Product> listProduct();
+    List<Product> listProduct(int pageNum, int pageSize);
 
     Product findByid(int id);
 
