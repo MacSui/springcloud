@@ -59,9 +59,10 @@ public class ProductOrderServiceImpl implements ProductOrderService {
     }
 
     @Override
-    public ProductOrder findWithFeign(int userId, int productId) {
-        logger.info("*** findWithFeign Method-----");
+    public ProductOrder saveWithFeign(int userId, int productId) {
+        logger.info("*** saveWithFeign Method-----");
         String result = productClient.findById(productId);
+        // 查询到产品，保存订单信息
         JsonNode jsonNode = JsonUtils.parseToJson(result);
         return getProductOrder(userId, productId, jsonNode.get("name"));
     }

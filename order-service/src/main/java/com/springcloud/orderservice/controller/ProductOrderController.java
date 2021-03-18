@@ -3,12 +3,15 @@ package com.springcloud.orderservice.controller;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.springcloud.orderservice.domain.ProductOrder;
 import com.springcloud.orderservice.service.ProductOrderService;
-import com.springcloud.orderservice.utils.JsonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description:
@@ -28,8 +32,13 @@ import java.util.Map;
 @RequestMapping("/api/v1/order")
 public class ProductOrderController {
 
+    private static Logger logger = LoggerFactory.getLogger(ProductOrderController.class);
+
     @Autowired
     private ProductOrderService orderService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @ApiOperation("订单保存")
     @ApiImplicitParams({@ApiImplicitParam(name="user_id", value = "用户id", paramType = "query", dataType = "int"),
@@ -50,17 +59,29 @@ public class ProductOrderController {
 
         return orderService.saveWithClient(userId, productId);
     }
-    @GetMapping("findWithFeign")
-    @HystrixCommand(fallbackMethod = "findWithFeignFallback")
-    public Object findWithFeign(@RequestParam("user_id")int userId, @RequestParam("product_id")int productId){
-        ProductOrder order = orderService.findWithFeign(userId, productId);
+    @GetMapping("saveWithFeign")
+    @HystrixCommand(fallbackMethod = "saveWithFeignFallback")
+    public Object saveWithFeign(@RequestParam("user_id")int userId, @RequestParam("product_id")int productId){
+        ProductOrder order = orderService.saveWithFeign(userId, productId);
         Map<String, Object> data = new HashMap<>();
         data.put("code", "1");
         data.put("data", order);
         return data;
     }
 
-    public Object findWithFeignFallback(int userId, int productId){
+    public Object saveWithFeignFallback(int userId, int productId){
+
+        new Thread(()->{
+            String saveKey = "save-order-key";
+            String saveKeyValue = redisTemplate.opsForValue().get(saveKey);
+            if (StringUtils.isBlank(saveKeyValue)){
+                logger.info("失败告警：下单失败，请查找失败原因！");
+                redisTemplate.opsForValue().set(saveKey, "save order fail", 30, TimeUnit.SECONDS);
+            } else {
+                logger.info("短信已发送，30s内不能重复发送");
+            }
+        }).start();
+
         Map<String, Object> map = new HashMap<>();
         map.put("code", "-1");
         map.put("msg", "当前人数太多，请稍后再试！");

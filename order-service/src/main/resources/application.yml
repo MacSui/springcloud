@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: order-service
+  redis:
+    database: 0
+    host: 47.103.42.10
+    port: 6379
+    timeout: 2000
 
 eureka:
   client:

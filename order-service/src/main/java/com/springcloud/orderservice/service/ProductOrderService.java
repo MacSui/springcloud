@@ -13,6 +13,6 @@ public interface ProductOrderService {
 
     ProductOrder saveWithClient(int userId, int productId);
 
-    ProductOrder findWithFeign(int userId, int productId);
+    ProductOrder saveWithFeign(int userId, int productId);
 
 }
