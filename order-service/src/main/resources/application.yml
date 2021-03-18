@@ -1,6 +1,10 @@
 server:
   port: 8781
 
+spring:
+  application:
+    name: order-service
+
 eureka:
   client:
     service-url:
@@ -10,6 +14,8 @@ product-service:
   ribbon:
     NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
 
-spring:
-  application:
-    name: order-service
+
+feign:
+  hystrix:
+    enabled: true
+

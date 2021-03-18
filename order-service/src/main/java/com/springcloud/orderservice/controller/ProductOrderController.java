@@ -1,7 +1,9 @@
 package com.springcloud.orderservice.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.springcloud.orderservice.domain.ProductOrder;
 import com.springcloud.orderservice.service.ProductOrderService;
+import com.springcloud.orderservice.utils.JsonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description:
@@ -46,10 +50,21 @@ public class ProductOrderController {
 
         return orderService.saveWithClient(userId, productId);
     }
-    @GetMapping("saveWithFeign")
-    public ProductOrder saveWithFeign(@RequestParam("user_id")int userId, @RequestParam("product_id")int productId){
-        return orderService.saveWithFeign(userId, productId);
+    @GetMapping("findWithFeign")
+    @HystrixCommand(fallbackMethod = "findWithFeignFallback")
+    public Object findWithFeign(@RequestParam("user_id")int userId, @RequestParam("product_id")int productId){
+        ProductOrder order = orderService.findWithFeign(userId, productId);
+        Map<String, Object> data = new HashMap<>();
+        data.put("code", "1");
+        data.put("data", order);
+        return data;
     }
 
+    public Object findWithFeignFallback(int userId, int productId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", "-1");
+        map.put("msg", "当前人数太多，请稍后再试！");
+        return map;
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.springcloud.orderservice.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,6 +22,15 @@ public class JsonUtils {
             e.printStackTrace();
             return  null;
         }
+    }
+
+    public static String parseToString(Object o){
+        try {
+            return objectMapper.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

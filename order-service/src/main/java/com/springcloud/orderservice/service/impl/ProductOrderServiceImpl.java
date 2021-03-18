@@ -5,10 +5,12 @@ import com.springcloud.orderservice.domain.ProductOrder;
 import com.springcloud.orderservice.service.ProductClient;
 import com.springcloud.orderservice.service.ProductOrderService;
 import com.springcloud.orderservice.utils.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +25,8 @@ import java.util.UUID;
  **/
 @Service
 public class ProductOrderServiceImpl implements ProductOrderService {
+
+    private static Logger logger = LoggerFactory.getLogger(ProductOrderServiceImpl.class);
 
     @Autowired
     private RestTemplate restTemplate;
@@ -39,14 +43,7 @@ public class ProductOrderServiceImpl implements ProductOrderService {
         Map<String, Object> map = restTemplate.getForObject("http://product-service/api/v1/product/getProduct?id=" + productId,
                 Map.class);
 
-        ProductOrder order = new ProductOrder();
-        order.setCreateTime(new Date());
-        order.setProductId(productId);
-        order.setProductName(map.get("name").toString());
-        order.setUserId(userId);
-        order.setTranNo(UUID.randomUUID().toString());
-
-        return order;
+        return getProductOrder(userId, productId, map.get("name"));
     }
 
     @Override
@@ -58,25 +55,22 @@ public class ProductOrderServiceImpl implements ProductOrderService {
         RestTemplate restTemplate = new RestTemplate();
         Map map = restTemplate.getForObject(url, Map.class);
 
-        ProductOrder order = new ProductOrder();
-        order.setCreateTime(new Date());
-        order.setProductId(productId);
-        order.setProductName(map.get("name").toString());
-        order.setUserId(userId);
-        order.setTranNo(UUID.randomUUID().toString());
-
-        return order;
+        return getProductOrder(userId, productId, map.get("name"));
     }
 
     @Override
-    public ProductOrder saveWithFeign(int userId, int productId) {
-        System.out.println("saveWithFeign Method-----");
+    public ProductOrder findWithFeign(int userId, int productId) {
+        logger.info("*** findWithFeign Method-----");
         String result = productClient.findById(productId);
         JsonNode jsonNode = JsonUtils.parseToJson(result);
+        return getProductOrder(userId, productId, jsonNode.get("name"));
+    }
+
+    private ProductOrder getProductOrder(int userId, int productId, Object name) {
         ProductOrder order = new ProductOrder();
         order.setCreateTime(new Date());
         order.setProductId(productId);
-        order.setProductName(jsonNode.get("name").toString());
+        order.setProductName(name.toString());
         order.setUserId(userId);
         order.setTranNo(UUID.randomUUID().toString());
 
